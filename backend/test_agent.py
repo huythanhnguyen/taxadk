@@ -18,13 +18,17 @@ try:
     print(f"📋 Agent name: {agent.root_agent.name}")
     print(f"🤖 Agent model: {agent.root_agent.model}")
     
-    # Check if subagents exist
-    if hasattr(agent.root_agent, 'subagents') and agent.root_agent.subagents:
+    # Check if sub_agents exist
+    if hasattr(agent.root_agent, 'sub_agents') and agent.root_agent.sub_agents:
+        print(f"✅ Sub-agents found: {len(agent.root_agent.sub_agents)}")
+        for i, subagent in enumerate(agent.root_agent.sub_agents):
+            print(f"  {i+1}. {subagent.name} - {subagent.description[:50]}...")
+    elif hasattr(agent.root_agent, 'subagents') and agent.root_agent.subagents:
         print(f"✅ Subagents found: {len(agent.root_agent.subagents)}")
         for i, subagent in enumerate(agent.root_agent.subagents):
             print(f"  {i+1}. {subagent.name} - {subagent.description[:50]}...")
     else:
-        print("❌ No subagents found!")
+        print("❌ No sub-agents found!")
         
     # Test individual subagent imports
     print("\n🔍 Testing individual subagent imports...")
@@ -41,11 +45,8 @@ try:
     except Exception as e:
         print(f"❌ OCR agent error: {e}")
         
-    try:
-        from htkk_agents.sub_agents.tax_validator_agent import tax_validator_agent
-        print(f"✅ Tax validator agent: {tax_validator_agent.name}")
-    except Exception as e:
-        print(f"❌ Tax validator agent error: {e}")
+    # Tax validator agent has been merged into form_agent
+    print("ℹ️  Tax validator functionality merged into form_agent")
         
     print("\n🎉 Agent configuration test completed!")
     
