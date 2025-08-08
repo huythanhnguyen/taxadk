@@ -4,7 +4,7 @@ These tools handle tax calculations, business rule validation, and compliance ch
 """
 import json
 from typing import Dict, Any, List, Optional
-from backend.htkk_agents.constants import TAX_RATES
+from htkk_agents.constants import TAX_RATES
 
 # Mock FormEngine for now - will be replaced with actual implementation
 class FormEngine:

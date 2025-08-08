@@ -252,7 +252,7 @@ def get_available_form_types() -> str:
     print("--- Tool: get_available_form_types called ---")
     
     try:
-        from backend.htkk_agents.constants import HTKK_FORM_TYPES
+        from htkk_agents.constants import HTKK_FORM_TYPES
         
         return json.dumps({
             "success": True,

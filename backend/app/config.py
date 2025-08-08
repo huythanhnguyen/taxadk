@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     db_user: str = Field(default="tax_user")
     db_password: str = Field(default="7deku223FM7bXjVoAV6MxE5EHBzDq71c")
     
-    # Google ADK & AI
-    google_application_credentials: Optional[str] = Field(default=None)
+    # Google API & AI
+    google_api_key: Optional[str] = Field(default=None)
     google_project_id: Optional[str] = Field(default=None)
     google_location: str = Field(default="us-central1")
     gemini_model: str = Field(default="gemini-2.5-flash-lite")

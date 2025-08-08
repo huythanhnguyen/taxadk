@@ -58,7 +58,7 @@ Xây dựng hệ thống kê khai thuế tự động sử dụng Google ADK Mul
 - **Tax Validator Agent:** Sub-agent for business rule validation and tax calculations
 - **Tools:** Python functions wrapped as ADK tools for specific functionalities
 - Google ADK server with built-in web UI and streaming support
-- Gemini 2.5 Flash integration via Google ADK
+- Gemini 2.5 Flash Lite integration via Google ADK
 
 **Database (PostgreSQL - Minimized)**
 - User sessions và authentication

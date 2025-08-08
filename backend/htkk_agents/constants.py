@@ -3,7 +3,8 @@ Constants for the HTKK AI multi-agent system.
 """
 
 # Define model constants for Google ADK
-MODEL_GEMINI_2_5_FLASH = "gemini-2.5-flash"
+MODEL_GEMINI_2_5_FLASH_LITE = "gemini-2.5-flash-lite"
+MODEL_GEMINI_2_5_FLASH = "gemini-2.5-flash-lite"  # Alias for consistency
 MODEL_GEMINI_2_0_FLASH = "gemini-2.0-flash"
 MODEL_GEMINI_PRO = "gemini-2.0-pro"
 

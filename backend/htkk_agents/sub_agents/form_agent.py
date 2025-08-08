@@ -4,8 +4,8 @@ Form agent for handling HTKK form templates, rendering, and validation.
 
 from google.adk.agents import Agent
 
-from backend.htkk_agents.constants import MODEL_GEMINI_2_5_FLASH
-from backend.htkk_agents.tools.form_tools import (
+from htkk_agents.constants import MODEL_GEMINI_2_5_FLASH_LITE
+from htkk_agents.tools.form_tools import (
     parse_htkk_template,
     render_form_structure,
     validate_form_data,
@@ -13,12 +13,12 @@ from backend.htkk_agents.tools.form_tools import (
     export_form_to_xml,
     get_available_form_types
 )
-from backend.htkk_agents.sub_agents.form_prompts import FORM_AGENT_INSTRUCTION, FORM_AGENT_DESCRIPTION
+from htkk_agents.sub_agents.form_prompts import FORM_AGENT_INSTRUCTION, FORM_AGENT_DESCRIPTION
 
 # Initialize the Form Agent
 form_agent = Agent(
     name="form_agent",
-    model=MODEL_GEMINI_2_5_FLASH,
+    model=MODEL_GEMINI_2_5_FLASH_LITE,
     description=FORM_AGENT_DESCRIPTION,
     instruction=FORM_AGENT_INSTRUCTION,
     tools=[
