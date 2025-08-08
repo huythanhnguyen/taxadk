@@ -295,7 +295,7 @@ const CONTROL_TYPES = {
 - **Build Tool:** Vite
 
 #### Backend  
-- **Framework:** Google ADK (Agent Development Kit) v1.5.0+
+- **Framework:** Google ADK (Agent Development Kit) v1.5.0+-lastest
 - **Model:** Gemini 2.5 Flash via Google ADK
 - **Server:** Google ADK built-in server with web UI
 - **Database:** PostgreSQL 15+ (minimal schema) 
