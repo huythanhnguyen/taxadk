@@ -1,3 +1,0 @@
-"""
-HTKK AI Backend Package
-"""

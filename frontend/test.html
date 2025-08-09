@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTKK AI Test</title>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+        }
+        
+        .bg-card { background-color: hsl(var(--card)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .border { border-width: 1px; }
+        .border-border { border-color: hsl(var(--border)); }
+        .rounded-lg { border-radius: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .m-4 { margin: 1rem; }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <div class="m-4">
+        <div class="bg-card text-card-foreground border border-border rounded-lg p-4 shadow-lg">
+            <h1 class="text-2xl font-bold mb-4">HTKK AI Frontend Test</h1>
+            <p>Nếu bạn thấy card này với styling đúng, CSS đã hoạt động!</p>
+            <button class="bg-primary text-primary-foreground p-2 rounded mt-4">Test Button</button>
+        </div>
+    </div>
+</body>
+</html>
+
