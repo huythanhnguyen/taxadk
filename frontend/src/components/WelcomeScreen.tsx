@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { InputForm } from "@/components/InputForm";
 import { 
   Calculator, 
   FileText, 
@@ -16,32 +15,19 @@ import {
 } from 'lucide-react';
 
 interface WelcomeScreenProps {
-  handleSubmit: (query: string, imageFile?: File | null, audioFile?: File | null) => void;
+  handleSubmit: (query: string, imageFile?: File | null, audioFile?: File | null, documentFile?: File | null) => void;
   isLoading: boolean;
   onCancel: () => void;
   onTaxFormSelect: (formType: string) => void;
 }
 
 export function WelcomeScreen({ handleSubmit, isLoading, onTaxFormSelect }: WelcomeScreenProps) {
-  const [query, setQuery] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-  };
-
   const handleQuickSubmit = (quickQuery: string) => {
     handleSubmit(quickQuery);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim() || selectedFile) {
-      handleSubmit(query, selectedFile);
-      setQuery("");
-      setSelectedFile(null);
-    }
+  const handleInputSubmit = (query: string, imageFile: File | null, audioFile: File | null, documentFile?: File | null) => {
+    handleSubmit(query, imageFile, audioFile, documentFile);
   };
 
   const quickActions = [
@@ -93,123 +79,64 @@ export function WelcomeScreen({ handleSubmit, isLoading, onTaxFormSelect }: Welc
   ];
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 overflow-auto bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="w-full max-w-6xl space-y-8">
+    <div className="flex-1 flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8 overflow-auto bg-gradient-to-br from-background via-background to-primary/5">
+      <div className="w-full max-w-7xl space-y-6 sm:space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 rounded-full bg-primary/10 border border-primary/20">
-              <Calculator className="w-8 h-8 text-primary" />
+        <div className="text-center space-y-3 sm:space-y-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="p-2 sm:p-3 rounded-full bg-primary/10 border border-primary/20">
+              <Calculator className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               HTKK AI
             </h1>
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Hệ thống kê khai thuế thông minh với AI - Tự động hóa quy trình thuế của bạn
           </p>
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
+          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
             <span>Được hỗ trợ bởi Google ADK Multi-Agent AI</span>
           </div>
         </div>
 
         {/* Quick Chat Input */}
-        <Card className="border-2 border-primary/20 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" />
+        <div className="space-y-3 sm:space-y-4">
+          <div className="text-center">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+              <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
               Chat với AI Assistant
-            </CardTitle>
-            <CardDescription>
-              Đặt câu hỏi về thuế, tải lên tài liệu hoặc yêu cầu hỗ trợ
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleFormSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Textarea
-                  placeholder="Ví dụ: Hướng dẫn tôi cách kê khai thuế VAT cho doanh nghiệp..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="min-h-[100px] resize-none"
-                  disabled={isLoading}
-                />
-                
-                {/* File Upload */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <Input
-                      type="file"
-                      accept=".pdf,.xml,.jpg,.jpeg,.png"
-                      onChange={handleFileChange}
-                      className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {selectedFile && (
-                    <div className="text-sm text-muted-foreground">
-                      📎 {selectedFile.name}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex gap-2">
-                <Button 
-                  type="submit" 
-                  disabled={isLoading || (!query.trim() && !selectedFile)}
-                  className="flex-1"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                      Đang xử lý...
-                    </>
-                  ) : (
-                    <>
-                      <Bot className="w-4 h-4 mr-2" />
-                      Gửi tin nhắn
-                    </>
-                  )}
-                </Button>
-                {(query.trim() || selectedFile) && (
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => {
-                      setQuery("");
-                      setSelectedFile(null);
-                    }}
-                    disabled={isLoading}
-                  >
-                    Xóa
-                  </Button>
-                )}
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground mt-2 px-4">
+              Đặt câu hỏi về thuế, tải lên tài liệu, ghi âm voice hoặc yêu cầu hỗ trợ
+            </p>
+          </div>
+          <InputForm 
+            onSubmit={handleInputSubmit}
+            isLoading={isLoading}
+            context="homepage"
+          />
+        </div>
 
         {/* Quick Actions */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-center">Hành động nhanh</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-3 sm:space-y-4">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center">Hành động nhanh</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {quickActions.map((action, index) => (
               <Card 
                 key={index} 
                 className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-border/50 hover:border-primary/50"
                 onClick={() => handleQuickSubmit(action.query)}
               >
-                <CardContent className="p-4 text-center space-y-3">
+                <CardContent className="p-3 sm:p-4 text-center space-y-2 sm:space-y-3">
                   <div className="flex justify-center">
-                    <div className="p-3 rounded-full bg-primary/10">
-                      <action.icon className="w-6 h-6 text-primary" />
+                    <div className="p-2 sm:p-3 rounded-full bg-primary/10">
+                      <action.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm">{action.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{action.description}</p>
+                    <h3 className="font-semibold text-xs sm:text-sm">{action.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{action.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -218,23 +145,23 @@ export function WelcomeScreen({ handleSubmit, isLoading, onTaxFormSelect }: Welc
         </div>
 
         {/* Tax Forms */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-center">Tờ khai thuế</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-3 sm:space-y-4">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center">Tờ khai thuế</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {taxForms.map((form, index) => (
               <Card 
                 key={index} 
                 className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-border/50 hover:border-primary/50"
                 onClick={() => onTaxFormSelect(form.code)}
               >
-                <CardContent className="p-6 text-center space-y-4">
+                <CardContent className="p-4 sm:p-6 text-center space-y-3 sm:space-y-4">
                   <div className="flex justify-center">
-                    <div className="p-4 rounded-full bg-primary/10">
-                      <form.icon className="w-8 h-8 text-primary" />
+                    <div className="p-3 sm:p-4 rounded-full bg-primary/10">
+                      <form.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">{form.code}</h3>
+                    <h3 className="font-semibold text-base sm:text-lg">{form.code}</h3>
                     <p className="font-medium text-sm">{form.title}</p>
                     <p className="text-xs text-muted-foreground mt-1">{form.description}</p>
                   </div>
@@ -249,23 +176,23 @@ export function WelcomeScreen({ handleSubmit, isLoading, onTaxFormSelect }: Welc
 
         {/* Features */}
         <Card className="bg-muted/30">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4 text-center">Tính năng nổi bật</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-center">Tính năng nổi bật</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-sm">
               <div className="text-center space-y-2">
-                <Bot className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-medium">AI Multi-Agent</h4>
-                <p className="text-muted-foreground">3 chuyên gia AI: Form Agent, OCR Agent, Tax Validator</p>
+                <Bot className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto" />
+                <h4 className="font-medium text-sm sm:text-base">AI Multi-Agent</h4>
+                <p className="text-xs sm:text-sm text-muted-foreground">3 chuyên gia AI: Form Agent, OCR Agent, Tax Validator</p>
               </div>
               <div className="text-center space-y-2">
-                <Upload className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-medium">Xử lý tài liệu</h4>
-                <p className="text-muted-foreground">Tự động trích xuất dữ liệu từ PDF, XML, hình ảnh</p>
+                <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto" />
+                <h4 className="font-medium text-sm sm:text-base">Xử lý tài liệu</h4>
+                <p className="text-xs sm:text-sm text-muted-foreground">Tự động trích xuất dữ liệu từ PDF, XML, hình ảnh</p>
               </div>
-              <div className="text-center space-y-2">
-                <FileText className="w-8 h-8 text-primary mx-auto" />
-                <h4 className="font-medium">Tương thích HTKK</h4>
-                <p className="text-muted-foreground">100% tương thích với hệ thống HTKK của Tổng cục Thuế</p>
+              <div className="text-center space-y-2 sm:col-span-2 lg:col-span-1">
+                <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto" />
+                <h4 className="font-medium text-sm sm:text-base">Tương thích HTKK</h4>
+                <p className="text-xs sm:text-sm text-muted-foreground">100% tương thích với hệ thống HTKK của Tổng cục Thuế</p>
               </div>
             </div>
           </CardContent>

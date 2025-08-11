@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { ChatMessagesView } from "@/components/chat/ChatMessagesView";
 import { TaxFormView } from "@/components/tax-forms/TaxFormView";
-import { TailwindV4Demo } from "@/components/TailwindV4Demo";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Menu, FileText, MessageSquare, Calculator } from 'lucide-react';
@@ -12,14 +12,10 @@ import { ChatHistorySidebar } from "@/components/chat/ChatHistorySidebar";
 // Import types
 import { MessageWithAgent, ChatSession } from '@/types/chat';
 import { TaxForm } from '@/types/tax-forms';
-import { 
-  createSessionFromMessages, 
-  saveSessionsToStorage, 
-  loadSessionsFromStorage 
-} from '@/utils/sessionUtils';
+
 
 type DisplayData = string | null;
-type ViewMode = 'welcome' | 'chat' | 'tax-forms' | 'demo';
+type ViewMode = 'welcome' | 'chat' | 'tax-forms';
 
 interface ProcessedEvent {
   title: string;
@@ -280,7 +276,7 @@ export default function App() {
     }
   };
 
-  const runAgent = async (query: string, imageFile?: File, audioFile?: File, sessionData?: {userId: string, sessionId: string, appName: string}): Promise<string> => {
+  const runAgent = async (query: string, imageFile?: File, audioFile?: File, documentFile?: File, sessionData?: {userId: string, sessionId: string, appName: string}): Promise<string> => {
     console.log('[RUN AGENT] Starting with query:', query);
     
     // Use provided session data or current state
@@ -315,6 +311,17 @@ export default function App() {
         inlineData: {
           mimeType: audioFile.type,
           data: base64Audio.split(',')[1] // Remove data:audio/...;base64, prefix
+        }
+      });
+    }
+
+    // Add document if provided
+    if (documentFile) {
+      const base64Document = await fileToBase64(documentFile);
+      parts.push({
+        inlineData: {
+          mimeType: documentFile.type,
+          data: base64Document.split(',')[1] // Remove data:application/...;base64, prefix
         }
       });
     }
@@ -419,8 +426,8 @@ export default function App() {
     });
   };
 
-  const handleSubmit = useCallback(async (query: string, imageFile: File | null = null, audioFile: File | null = null) => {
-    if (!query.trim() && !imageFile && !audioFile) return;
+  const handleSubmit = useCallback(async (query: string, imageFile: File | null = null, audioFile: File | null = null, documentFile: File | null = null) => {
+    if (!query.trim() && !imageFile && !audioFile && !documentFile) return;
 
     setIsLoading(true);
     setViewMode('chat'); // Switch to chat view when submitting
@@ -454,17 +461,24 @@ export default function App() {
         displayContent = "🎤 Voice message";
       } else if (imageFile) {
         displayContent = "📷 Image";
+      } else if (documentFile) {
+        displayContent = "📄 Document";
       }
       
-      // If both text and audio, show both
-      if (query && audioFile) {
-        displayContent = `${query} 🎤`;
-      } else if (query && imageFile) {
-        displayContent = `${query} 📷`;
-      } else if (audioFile && imageFile) {
-        displayContent = "🎤 Voice message 📷";
-      } else if (query && audioFile && imageFile) {
-        displayContent = `${query} 🎤📷`;
+      // Handle combinations
+      const attachments = [];
+      if (audioFile) attachments.push("🎤");
+      if (imageFile) attachments.push("📷");
+      if (documentFile) attachments.push("📄");
+      
+      if (query && attachments.length > 0) {
+        displayContent = `${query} ${attachments.join("")}`;
+      } else if (!query && attachments.length > 1) {
+        const labels = [];
+        if (audioFile) labels.push("Voice");
+        if (imageFile) labels.push("Image");
+        if (documentFile) labels.push("Document");
+        displayContent = `${attachments.join("")} ${labels.join(" + ")}`;
       }
 
       const userMessage: MessageWithAgent = {
@@ -476,7 +490,7 @@ export default function App() {
       setMessages(prev => [...prev, userMessage]);
 
       // Get agent response
-      await runAgent(query || "Process this media", imageFile || undefined, audioFile || undefined, {
+      await runAgent(query || "Process this media", imageFile || undefined, audioFile || undefined, documentFile || undefined, {
         userId: currentUserId!,
         sessionId: currentSessionId!,
         appName: currentAppName!
@@ -501,7 +515,7 @@ export default function App() {
           setAppName(sessionData.appName);
           
           // Retry the request with new session
-          await runAgent(query || "Process this media", imageFile || undefined, audioFile || undefined, sessionData);
+          await runAgent(query || "Process this media", imageFile || undefined, audioFile || undefined, documentFile || undefined, sessionData);
           return; // Success, exit function
         } catch (retryError) {
           console.error('[HANDLE_SUBMIT] Failed to recreate session:', retryError);
@@ -709,15 +723,7 @@ export default function App() {
               <FileText className="w-4 h-4" />
               Tờ khai thuế
             </Button>
-            <Button
-              variant={viewMode === 'demo' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('demo')}
-              className="flex items-center gap-2"
-            >
-              <Calculator className="w-4 h-4" />
-              Demo v4
-            </Button>
+
           </div>
         </div>
 
@@ -772,9 +778,7 @@ export default function App() {
               />
             )}
             
-            {viewMode === 'demo' && (
-              <TailwindV4Demo />
-            )}
+
           </>
         )}
       </div>

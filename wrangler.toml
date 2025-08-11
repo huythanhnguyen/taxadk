@@ -1,0 +1,28 @@
+name = "htkk-ai"
+main = "backend/src/index.ts"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "htkk-ai-db"
+database_id = "a1cfd47b-300e-4366-8901-14cab692df5c"
+
+# R2 Storage Bindings
+[[r2_buckets]]
+binding = "R2_BASIC"
+bucket_name = "htkk-ai-basic"
+
+[[r2_buckets]]
+binding = "R2_PREMIUM"
+bucket_name = "htkk-ai-premium"
+
+[[r2_buckets]]
+binding = "R2_ENTERPRISE"
+bucket_name = "htkk-ai-enterprise"
+
+[[r2_buckets]]
+binding = "R2_TEMP"
+bucket_name = "htkk-ai-temp"
+
+[vars]
+ENVIRONMENT = "production"

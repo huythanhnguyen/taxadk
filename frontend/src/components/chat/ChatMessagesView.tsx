@@ -1,18 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { InputForm } from "@/components/InputForm";
 import { 
-  Send, 
-  Upload, 
   Bot, 
   User, 
   FileText, 
   Image as ImageIcon,
   Mic,
-  X,
   Copy,
   Check
 } from 'lucide-react';
@@ -25,7 +21,7 @@ interface ChatMessagesViewProps {
   messages: MessageWithAgent[];
   isLoading: boolean;
   scrollAreaRef: React.RefObject<HTMLDivElement>;
-  onSubmit: (query: string, imageFile?: File | null, audioFile?: File | null) => void;
+  onSubmit: (query: string, imageFile?: File | null, audioFile?: File | null, documentFile?: File | null) => void;
   onCancel: () => void;
   displayData: string | null;
   messageEvents: Map<string, any[]>;
@@ -40,31 +36,13 @@ export function ChatMessagesView({
   displayData,
   messageEvents
 }: ChatMessagesViewProps) {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inputValue.trim() || selectedFile) {
-      onSubmit(inputValue, selectedFile);
-      setInputValue("");
-      setSelectedFile(null);
-    }
+  const handleInputSubmit = (query: string, imageFile: File | null, audioFile: File | null, documentFile?: File | null) => {
+    onSubmit(query, imageFile, audioFile, documentFile);
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-  };
 
-  const removeFile = () => {
-    setSelectedFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
 
   const copyToClipboard = async (text: string, messageId: string) => {
     try {
@@ -237,99 +215,28 @@ export function ChatMessagesView({
 
       {/* Input Area */}
       <div className="border-t bg-background/95 backdrop-blur-sm p-4">
-        <div className="max-w-4xl mx-auto">
-          {/* File preview */}
-          {selectedFile && (
-            <div className="mb-3 p-3 bg-muted rounded-lg flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {selectedFile.type.startsWith('image/') ? (
-                  <ImageIcon className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <FileText className="w-4 h-4 text-muted-foreground" />
-                )}
-                <span className="text-sm">{selectedFile.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  ({(selectedFile.size / 1024).toFixed(1)} KB)
-                </span>
-              </div>
+        <div className="max-w-4xl mx-auto space-y-3">
+
+          <InputForm 
+            onSubmit={handleInputSubmit}
+            isLoading={isLoading}
+            context="chat"
+          />
+          
+          <div className="flex justify-between items-center text-xs text-muted-foreground">
+            <span>Hỗ trợ text, voice, và hình ảnh • Space để ghi âm</span>
+            {messages.length > 0 && (
               <Button
+                type="button"
                 variant="ghost"
                 size="sm"
-                onClick={removeFile}
-                className="h-6 w-6 p-0"
+                onClick={onCancel}
+                className="h-6 px-2 text-xs"
               >
-                <X className="w-4 h-4" />
+                Cuộc trò chuyện mới
               </Button>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="flex gap-2">
-              <div className="flex-1">
-                <Textarea
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Nhập tin nhắn của bạn..."
-                  className="min-h-[60px] max-h-[120px] resize-none"
-                  disabled={isLoading}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-              </div>
-              
-              <div className="flex flex-col gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".pdf,.xml,.jpg,.jpeg,.png"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  disabled={isLoading}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isLoading}
-                  className="h-10 w-10 p-0"
-                >
-                  <Upload className="w-4 h-4" />
-                </Button>
-                
-                <Button
-                  type="submit"
-                  disabled={isLoading || (!inputValue.trim() && !selectedFile)}
-                  className="h-10 w-10 p-0"
-                >
-                  {isLoading ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center text-xs text-muted-foreground">
-              <span>Nhấn Enter để gửi, Shift+Enter để xuống dòng</span>
-              {messages.length > 0 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={onCancel}
-                  className="h-6 px-2 text-xs"
-                >
-                  Cuộc trò chuyện mới
-                </Button>
-              )}
-            </div>
-          </form>
+            )}
+          </div>
         </div>
       </div>
     </div>
