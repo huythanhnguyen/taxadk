@@ -1,17 +1,9 @@
-import { useState, useRef, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+// import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { InputForm } from "@/components/InputForm";
-import { 
-  Bot, 
-  User, 
-  FileText, 
-  Image as ImageIcon,
-  Mic,
-  Copy,
-  Check
-} from 'lucide-react';
+import { Bot, User, FileText, Image as ImageIcon, Copy, Check } from 'lucide-react';
 import { MessageWithAgent } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -23,7 +15,7 @@ interface ChatMessagesViewProps {
   scrollAreaRef: React.RefObject<HTMLDivElement>;
   onSubmit: (query: string, imageFile?: File | null, audioFile?: File | null, documentFile?: File | null) => void;
   onCancel: () => void;
-  displayData: string | null;
+  // displayData: string | null;
   messageEvents: Map<string, any[]>;
 }
 
@@ -33,10 +25,36 @@ export function ChatMessagesView({
   scrollAreaRef,
   onSubmit,
   onCancel,
-  displayData,
+  // displayData,
   messageEvents
 }: ChatMessagesViewProps) {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+
+  const downloadFile = (filename: string, content: string, mime: string = 'application/octet-stream') => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download failed:', e);
+    }
+  };
+
+  const tryParseJson = (text: any): any => {
+    if (text && typeof text === 'object') return text;
+    if (typeof text !== 'string') return null;
+    try {
+      return JSON.parse(text);
+    } catch {
+      return null;
+    }
+  };
 
   const handleInputSubmit = (query: string, imageFile: File | null, audioFile: File | null, documentFile?: File | null) => {
     onSubmit(query, imageFile, audioFile, documentFile);
@@ -126,10 +144,10 @@ export function ChatMessagesView({
                   {message.type === 'ai' ? (
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
-                      rehypePlugins={[rehypeRaw]}
+                      rehypePlugins={[rehypeRaw as unknown as any]}
                       components={{
                         // Custom components for better styling
-                        code: ({ node, inline, className, children, ...props }) => {
+                        code: ({ inline, className, children, ...props }: any) => {
                           return inline ? (
                             <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
                               {children}
@@ -155,12 +173,73 @@ export function ChatMessagesView({
                 {messageEvents.has(message.id) && (
                   <div className="mt-3 pt-3 border-t border-border/50">
                     <div className="text-xs text-muted-foreground mb-2">Hoạt động:</div>
-                    <div className="space-y-1">
-                      {messageEvents.get(message.id)?.map((event, index) => (
-                        <div key={index} className="text-xs bg-background/50 rounded px-2 py-1">
-                          {event.title}
-                        </div>
-                      ))}
+                    <div className="space-y-2">
+                      {messageEvents.get(message.id)?.map((event, index) => {
+                        const isFunctionResponse = event?.data?.type === 'functionResponse' || !!event?.data?.response;
+                        const name: string | undefined = event?.data?.name;
+                        // ADK returns payload under response.result as a JSON string for our tools
+                        const rawResult = event?.data?.response?.result;
+                        const parsed = tryParseJson(rawResult);
+                        const pretty = parsed ? JSON.stringify(parsed, null, 2) : (typeof rawResult === 'string' ? rawResult : undefined);
+
+                        // Determine download defaults
+                        let suggestedFilename = 'artifact.txt';
+                        let mime = 'text/plain;charset=utf-8';
+                        if (name === 'parse_htkk_template') {
+                          suggestedFilename = 'form_template.json';
+                          mime = 'application/json;charset=utf-8';
+                        } else if (name === 'render_form_structure') {
+                          suggestedFilename = 'form_structure.json';
+                          mime = 'application/json;charset=utf-8';
+                        } else if (name === 'export_form_to_xml') {
+                          // For export XML, payload is inside result JSON as xml_content
+                          const xmlExport = parsed && parsed.xml_content ? parsed.xml_content : undefined;
+                          if (xmlExport) {
+                            suggestedFilename = 'form_export.xml';
+                            mime = 'application/xml;charset=utf-8';
+                          }
+                        }
+
+                        const onDownload = () => {
+                          if (name === 'export_form_to_xml') {
+                            const xml = parsed && parsed.xml_content ? parsed.xml_content : pretty || '';
+                            downloadFile(suggestedFilename, xml, mime);
+                          } else {
+                            const content = pretty || '';
+                            downloadFile(suggestedFilename, content, mime);
+                          }
+                        };
+
+                        return (
+                          <div key={index} className="text-xs bg-background/50 rounded px-3 py-2">
+                            <div className="font-medium mb-1">{event.title}</div>
+                            {isFunctionResponse && (
+                              <div className="space-y-2">
+                                {/* Preview content */}
+                                {name === 'export_form_to_xml' ? (
+                                  <pre className="bg-muted p-2 rounded max-h-48 overflow-auto text-[11px]">
+{`<xml>
+  ... (preview)
+</xml>`}
+                                  </pre>
+                                ) : (
+                                  pretty && (
+                                    <pre className="bg-muted p-2 rounded max-h-48 overflow-auto text-[11px]">
+                                      {pretty}
+                                    </pre>
+                                  )
+                                )}
+                                {/* Download button */}
+                                <div className="flex justify-end">
+                                  <Button size="sm" variant="outline" className="h-7 text-[11px]" onClick={onDownload}>
+                                    Tải xuống {name === 'export_form_to_xml' ? 'XML' : 'JSON'}
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

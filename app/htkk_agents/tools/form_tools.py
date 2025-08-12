@@ -21,7 +21,23 @@ class FormEngine:
         return {"dependencies": {}}
     
     def export_to_xml(self, data):
-        return f"<xml>{data}</xml>"
+        # Minimal HTKK-like XML envelope so frontend preview/download makes sense
+        try:
+            from datetime import datetime
+            import json as _json
+            serialized = _json.dumps(data, ensure_ascii=False)
+        except Exception:
+            serialized = str(data)
+        return (
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            '<HSoThueDTu>'
+            '  <HSoKhaiThue>'
+            '    <CTieuTKhaiChinh>'
+            f'      <NoiDung>{serialized}</NoiDung>'
+            '    </CTieuTKhaiChinh>'
+            '  </HSoKhaiThue>'
+            '</HSoThueDTu>'
+        )
 
 
 def parse_htkk_template(form_type: str) -> str:
@@ -111,7 +127,7 @@ def render_form_structure(form_type: str, form_data: str = "{}") -> str:
         }, ensure_ascii=False)
 
 
-def validate_form_data(form_type: str, form_data: str) -> str:
+def validate_form_data(form_type: str, form_data) -> str:
     """Validate form data against HTKK business rules.
     
     Args:
@@ -125,7 +141,33 @@ def validate_form_data(form_type: str, form_data: str) -> str:
     
     try:
         engine = FormEngine()
-        data = json.loads(form_data)
+
+        # Accept both JSON string and already-parsed dict/list
+        if isinstance(form_data, (dict, list)):
+            data = form_data
+        elif isinstance(form_data, str):
+            try:
+                data = json.loads(form_data)
+            except json.JSONDecodeError:
+                # Attempt to handle single-quoted or python-literal strings safely
+                try:
+                    import ast
+                    data = ast.literal_eval(form_data)
+                    # Ensure it's JSON-serializable structure
+                    json.dumps(data, ensure_ascii=False)
+                except Exception:
+                    return json.dumps({
+                        "success": False,
+                        "error": "Invalid JSON format in form_data",
+                        "message": "Please provide valid JSON data"
+                    }, ensure_ascii=False)
+        else:
+            # Unsupported type
+            return json.dumps({
+                "success": False,
+                "error": "Unsupported form_data type",
+                "message": "form_data must be a JSON string or object"
+            }, ensure_ascii=False)
         
         # Validate form data
         validation_result = engine.validate_form_data({

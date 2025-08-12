@@ -10,6 +10,7 @@ psycopg2-binary>=2.9.0
 
 # Document processing
 PyPDF2>=3.0.0
+PyMuPDF>=1.26.0  # Essential for PDF processing, OCR, and page chunking in AI agents
 lxml>=4.9.0
 python-multipart>=0.0.6
 

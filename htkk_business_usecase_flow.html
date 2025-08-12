@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTKK AI Tax - Hybrid Privacy & AI Architecture</title>
+    <title>HTKK AI Tax - System Architecture & Component Overview</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -47,6 +47,91 @@
         .arch-desc {
             font-size: 1.1em;
             opacity: 0.9;
+        }
+        
+        .system-architecture {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #3498db;
+        }
+        
+        .arch-section-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .component-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comp-frontend { border-color: #e74c3c; }
+        .comp-backend { border-color: #3498db; }
+        .comp-ai { border-color: #9b59b6; }
+        .comp-storage { border-color: #f39c12; }
+        .comp-database { border-color: #27ae60; }
+        
+        .component-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .component-title::before {
+            content: "🔧 ";
+            margin-right: 8px;
+        }
+        
+        .component-desc {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .component-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .component-features li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ecf0f1;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        .component-features li:before {
+            content: "✅ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .component-tech {
+            background: #ecf0f1;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #7f8c8d;
         }
         
         .privacy-options {
@@ -243,48 +328,6 @@
             color: #2c3e50;
         }
         
-        .privacy-levels {
-            background: #f4e6ff;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            border-left: 4px solid #9b59b6;
-        }
-        
-        .privacy-levels-title {
-            font-weight: bold;
-            color: #9b59b6;
-            margin-bottom: 10px;
-        }
-        
-        .privacy-level {
-            margin-bottom: 8px;
-            font-size: 0.9em;
-        }
-        
-        .level-basic { color: #3498db; }
-        .level-premium { color: #e74c3c; }
-        .level-enterprise { color: #27ae60; }
-        
-        .cost-impact {
-            background: #e8f5e8;
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 15px;
-            border: 2px solid #27ae60;
-        }
-        
-        .cost-impact-title {
-            font-weight: bold;
-            color: #27ae60;
-            margin-bottom: 5px;
-        }
-        
-        .cost-impact-desc {
-            color: #27ae60;
-            font-size: 0.9em;
-        }
-        
         .ai-agents-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -326,35 +369,43 @@
             margin-right: 5px;
         }
         
-        .data-security {
-            background: #fff5f5;
-            border: 2px solid #e74c3c;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px 0;
+        .enhanced-features {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
         }
         
-        .security-title {
-            color: #e74c3c;
+        .enhanced-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .enhanced-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .enhanced-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .enhanced-item-title {
             font-weight: bold;
             margin-bottom: 10px;
+            font-size: 1.1em;
         }
         
-        .security-measures {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .security-measures li {
-            padding: 3px 0;
-            color: #2c3e50;
-            font-size: 0.9em;
-        }
-        
-        .security-measures li:before {
-            content: "🔒 ";
-            margin-right: 5px;
+        .enhanced-item-desc {
+            opacity: 0.9;
+            line-height: 1.5;
         }
         
         .recommendation-box {
@@ -457,17 +508,157 @@
             .comparison-table {
                 grid-template-columns: 1fr 1fr;
             }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="title">🧠 HTKK AI Tax - Hybrid Privacy & AI Architecture</h1>
+        <h1 class="title">🏗️ HTKK AI Tax - System Architecture & Component Overview</h1>
         
         <div class="architecture-header">
-            <div class="arch-title">⚖️ Balanced Approach: Privacy + AI Power</div>
+            <div class="arch-title">⚖️ Complete System Architecture</div>
             <div class="arch-desc">
-                OCR & Mapping cần AI backend mạnh, nhưng optimize cho privacy và cost với multiple tiers
+                Comprehensive overview of all system components, their roles, and how they work together
+            </div>
+        </div>
+        
+        <!-- System Architecture Overview -->
+        <div class="system-architecture">
+            <div class="arch-section-title">🏗️ System Architecture Components</div>
+            
+            <div class="component-grid">
+                <!-- Frontend Components -->
+                <div class="component-card comp-frontend">
+                    <div class="component-title">Frontend Layer (React + TypeScript)</div>
+                    <div class="component-desc">
+                        User interface components built with React and TypeScript, providing a modern and responsive experience.
+                    </div>
+                    <ul class="component-features">
+                        <li>Chat interface for AI interactions</li>
+                        <li>Document upload and management</li>
+                        <li>Form rendering and validation</li>
+                        <li>Real-time chat with AI agents</li>
+                        <li>File download and export functionality</li>
+                        <li>Responsive design for all devices</li>
+                    </ul>
+                    <div class="component-tech">
+                        <strong>Technologies:</strong> React 18, TypeScript, Tailwind CSS, Vite
+                    </div>
+                </div>
+                
+                <!-- Backend Components -->
+                <div class="component-card comp-backend">
+                    <div class="component-title">Backend API (FastAPI + Python)</div>
+                    <div class="component-desc">
+                        RESTful API server handling business logic, AI agent orchestration, and data processing.
+                    </div>
+                    <ul class="component-features">
+                        <li>AI agent management and routing</li>
+                        <li>Document processing endpoints</li>
+                        <li>User session management</li>
+                        <li>Data validation and sanitization</li>
+                        <li>Error handling and logging</li>
+                        <li>API rate limiting and security</li>
+                    </ul>
+                    <div class="component-tech">
+                        <strong>Technologies:</strong> FastAPI, Python 3.11+, Pydantic, Uvicorn
+                    </div>
+                </div>
+                
+                <!-- AI Components -->
+                <div class="component-card comp-ai">
+                    <div class="component-title">AI Agent System (Google ADK)</div>
+                    <div class="component-desc">
+                        Intelligent agents powered by Google's ADK framework, handling OCR, form mapping, and tax calculations.
+                    </div>
+                    <ul class="component-features">
+                        <li>OCR Agent: Document processing and text extraction</li>
+                        <li>Form Agent: Tax form mapping and validation</li>
+                        <li>Root Agent: Request routing and coordination</li>
+                        <li>LLM integration with Gemini models</li>
+                        <li>Tool-based processing pipeline</li>
+                        <li>Intelligent document chunking</li>
+                    </ul>
+                    <div class="component-tech">
+                        <strong>Technologies:</strong> Google ADK, Gemini 2.5 Flash Lite, Custom Tools
+                    </div>
+                </div>
+                
+                <!-- Storage Components -->
+                <div class="component-card comp-storage">
+                    <div class="component-title">Cloud Storage (Cloudflare R2)</div>
+                    <div class="component-desc">
+                        Scalable object storage for documents, with privacy controls and automatic cleanup.
+                    </div>
+                    <ul class="component-features">
+                        <li>Document upload and storage</li>
+                        <li>Privacy tier-based retention</li>
+                        <li>Automatic file cleanup</li>
+                        <li>CDN integration for fast access</li>
+                        <li>Encryption at rest and in transit</li>
+                        <li>Cost-effective storage solution</li>
+                    </ul>
+                    <div class="component-tech">
+                        <strong>Technologies:</strong> Cloudflare R2, S3-compatible API, CORS support
+                    </div>
+                </div>
+                
+                <!-- Database Components -->
+                <div class="component-card comp-database">
+                    <div class="component-title">Database Layer (Cloudflare D1)</div>
+                    <div class="component-desc">
+                        Serverless SQL database for user sessions, metadata, and system state management.
+                    </div>
+                    <ul class="component-features">
+                        <li>User session tracking</li>
+                        <li>Document metadata storage</li>
+                        <li>Processing history and logs</li>
+                        <li>Form template management</li>
+                        <li>Audit trail maintenance</li>
+                        <li>Real-time data synchronization</li>
+                    </ul>
+                    <div class="component-tech">
+                        <strong>Technologies:</strong> Cloudflare D1, SQLite, Serverless SQL
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced AI Features -->
+        <div class="enhanced-features">
+            <div class="enhanced-title">🚀 Enhanced AI Integration Features</div>
+            <div class="enhanced-grid">
+                <div class="enhanced-item">
+                    <div class="enhanced-item-title">📄 Intelligent Document Processing</div>
+                    <div class="enhanced-item-desc">
+                        Advanced OCR with PDF page chunking, automatic form detection, and intelligent data mapping using LLMs.
+                    </div>
+                </div>
+                
+                <div class="enhanced-item">
+                    <div class="enhanced-item-title">🧠 LLM-Optimized Tools</div>
+                    <div class="enhanced-item-desc">
+                        Custom tools designed specifically for LLM processing, including document analysis, structure detection, and form mapping.
+                    </div>
+                </div>
+                
+                <div class="enhanced-item">
+                    <div class="enhanced-item-title">🔄 End-to-End Pipeline</div>
+                    <div class="enhanced-item-desc">
+                        Complete workflow from document upload to XML export: R2 → OCR → Mapping → XML generation → Download.
+                    </div>
+                </div>
+                
+                <div class="enhanced-item">
+                    <div class="enhanced-item-title">📊 Smart Form Detection</div>
+                    <div class="enhanced-item-desc">
+                        Automatic detection of tax form types (01/GTGT, 02/TNCN, 03/TNDN) based on document content analysis.
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -614,20 +805,21 @@
                 <div class="step-number">3</div>
                 <div class="step-content step-ai">
                     <div class="step-location ai">🤖 GOOGLE ADK AI</div>
-                    <div class="step-title">🔍 Advanced OCR & Data Extraction</div>
+                    <div class="step-title">🔍 Enhanced OCR & Data Extraction</div>
                     <div class="step-description">
-                        Google ADK AI agents perform sophisticated OCR trên PDF documents 
-                        và extract structured data từ XML invoices với high accuracy.
+                        Google ADK AI agents perform sophisticated OCR với intelligent PDF chunking 
+                        và extract structured data từ documents với high accuracy.
                     </div>
                     
                     <div class="ai-agents-grid">
                         <div class="agent-card">
-                            <div class="agent-title">📄 OCR Specialist Agent</div>
-                            <div class="agent-desc">Advanced OCR cho Vietnamese tax documents</div>
+                            <div class="agent-title">📄 Enhanced OCR Agent</div>
+                            <div class="agent-desc">Advanced OCR với intelligent page chunking</div>
                             <ul class="agent-tasks">
+                                <li>PDF page analysis và chunking (>3 pages)</li>
+                                <li>Intelligent form type detection</li>
                                 <li>Multi-language OCR (VN/EN)</li>
                                 <li>Table structure recognition</li>
-                                <li>Handwriting detection</li>
                                 <li>Image quality enhancement</li>
                                 <li>Tax form format recognition</li>
                             </ul>
@@ -642,6 +834,7 @@
                                 <li>Entity recognition (companies, amounts)</li>
                                 <li>Date format standardization</li>
                                 <li>Currency amount extraction</li>
+                                <li>Pattern-based form detection</li>
                             </ul>
                         </div>
                         
@@ -654,6 +847,7 @@
                                 <li>Date range consistency</li>
                                 <li>Format compliance checking</li>
                                 <li>Error detection & flagging</li>
+                                <li>Mapping quality assessment</li>
                             </ul>
                         </div>
                         
@@ -666,6 +860,7 @@
                                 <li>Tax category classification</li>
                                 <li>Period-based grouping</li>
                                 <li>Regulatory compliance check</li>
+                                <li>Form type recommendation</li>
                             </ul>
                         </div>
                     </div>
@@ -700,7 +895,7 @@
                         field mappings cho target tax form với explanations.
                     </div>
                     <div class="step-data">
-                        <div class="step-data-title">🎯 Mapping Intelligence:</div>
+                        <div class="step-data-title">🎯 Enhanced Mapping Intelligence:</div>
                         <ul>
                             <li><strong>Form Understanding:</strong> Deep knowledge của HTKK form structures</li>
                             <li><strong>Business Logic:</strong> Apply tax rules và calculations</li>
@@ -708,6 +903,8 @@
                             <li><strong>Data Transformation:</strong> Convert formats và units</li>
                             <li><strong>Confidence Scoring:</strong> Rate mapping accuracy</li>
                             <li><strong>Exception Handling:</strong> Flag unusual cases</li>
+                            <li><strong>Auto Form Detection:</strong> Identify form types from content</li>
+                            <li><strong>Smart Field Mapping:</strong> Intelligent field correlation</li>
                         </ul>
                     </div>
                     
@@ -740,7 +937,7 @@
                         All source documents được auto-deleted theo privacy tier settings.
                     </div>
                     <div class="step-data">
-                        <div class="step-data-title">📤 Response Data:</div>
+                        <div class="step-data-title">📤 Enhanced Response Data:</div>
                         <ul>
                             <li><strong>Field Mappings:</strong> Exact values cho form fields</li>
                             <li><strong>Explanations:</strong> How values được calculated</li>
@@ -748,6 +945,8 @@
                             <li><strong>Validation Results:</strong> Errors và warnings</li>
                             <li><strong>Suggestions:</strong> Optimization recommendations</li>
                             <li><strong>Summary Stats:</strong> Totals và breakdowns</li>
+                            <li><strong>Form Type Detection:</strong> Recommended form types</li>
+                            <strong>Processing Metadata:</strong> Chunking info và strategies</li>
                         </ul>
                     </div>
                     
@@ -759,6 +958,7 @@
                             <li><strong>Enterprise Tier:</strong> Immediate deletion sau processing</li>
                             <li><strong>AI Memory:</strong> Processing context cleared instantly</li>
                             <li><strong>Audit Logs:</strong> Only metadata retained (no content)</li>
+                            <li><strong>Processing Artifacts:</strong> Temporary files auto-removed</li>
                         </ul>
                     </div>
                     
@@ -780,7 +980,7 @@
                         của confidence levels. User review và approve trước khi finalize.
                     </div>
                     <div class="step-data">
-                        <div class="step-data-title">✨ Auto-fill Features:</div>
+                        <div class="step-data-title">✨ Enhanced Auto-fill Features:</div>
                         <ul>
                             <li>Visual indicators cho AI-filled vs manual fields</li>
                             <li>Confidence scores displayed as color coding</li>
@@ -789,6 +989,8 @@
                             <li>Easy correction tools cho manual adjustments</li>
                             <li>Real-time validation và error checking</li>
                             <li>Auto-save drafts to Cloudflare D1</li>
+                            <li>Form type validation và suggestions</li>
+                            <li>Mapping quality indicators</li>
                         </ul>
                     </div>
                     <div class="cost-impact">
@@ -809,7 +1011,7 @@
                         digital signatures, và compliance validation.
                     </div>
                     <div class="step-data">
-                        <div class="step-data-title">📋 Export Processing:</div>
+                        <div class="step-data-title">📋 Enhanced Export Processing:</div>
                         <ul>
                             <li>Apply final validation rules và business logic</li>
                             <li>Generate HTKK XML format với proper structure</li>
@@ -818,6 +1020,8 @@
                             <li>Export to local file system</li>
                             <li>Optional backup to Cloudflare R2</li>
                             <li>Update submission history</li>
+                            <li>Form type validation và verification</li>
+                            <li>Mapping quality final assessment</li>
                         </ul>
                     </div>
                     <div class="cost-impact">

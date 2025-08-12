@@ -14,7 +14,7 @@ import { MessageWithAgent, ChatSession } from '@/types/chat';
 import { TaxForm } from '@/types/tax-forms';
 
 
-type DisplayData = string | null;
+// type DisplayData = string | null;
 type ViewMode = 'welcome' | 'chat' | 'tax-forms';
 
 interface ProcessedEvent {
@@ -27,7 +27,7 @@ export default function App() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [appName, setAppName] = useState<string | null>(null);
   const [messages, setMessages] = useState<MessageWithAgent[]>([]);
-  const [displayData, setDisplayData] = useState<DisplayData | null>(null);
+  // const [displayData, setDisplayData] = useState<DisplayData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [messageEvents, setMessageEvents] = useState<Map<string, ProcessedEvent[]>>(new Map());
   const [isBackendReady, setIsBackendReady] = useState(false);
@@ -317,13 +317,34 @@ export default function App() {
 
     // Add document if provided
     if (documentFile) {
-      const base64Document = await fileToBase64(documentFile);
-      parts.push({
-        inlineData: {
-          mimeType: documentFile.type,
-          data: base64Document.split(',')[1] // Remove data:application/...;base64, prefix
+      try {
+        // Upload to Cloudflare R2 first, pass R2 URL to the agent for OCR
+        const { cloudflareR2Service } = await import('@/services/cloudflare-r2');
+        const { privacyManager } = await import('@/services/privacy-manager');
+        const defaultTier = (privacyManager.getPrivacyTierRecommendations?.(5, 'medium', [])?.recommendedTier) || 'premium';
+        const upload = await cloudflareR2Service.uploadDocument(documentFile, defaultTier as any, currentSessionId!, currentUserId!);
+        if (upload.success && upload.url) {
+          parts.push({ text: `R2_FILE_URL: ${upload.url}\nFILE_TYPE: ${documentFile.type.includes('xml') ? 'xml' : 'pdf'}\nHãy đọc từ URL này bằng tool process_r2_document, sau đó map sang form phù hợp và chuyển cho form_agent để export_form_to_xml. Trả về xml_content.` });
+        } else {
+          // Fallback to inline base64 if upload fails
+          const base64Document = await fileToBase64(documentFile);
+          parts.push({
+            inlineData: {
+              mimeType: documentFile.type,
+              data: base64Document.split(',')[1]
+            }
+          });
         }
-      });
+      } catch (e) {
+        // Fallback to inline base64 on any error
+        const base64Document = await fileToBase64(documentFile);
+        parts.push({
+          inlineData: {
+            mimeType: documentFile.type,
+            data: base64Document.split(',')[1]
+          }
+        });
+      }
     }
 
     const requestBody = {
@@ -582,7 +603,7 @@ export default function App() {
 
   const handleCancel = useCallback(() => {
     setMessages([]);
-    setDisplayData(null);
+    // setDisplayData(null);
     setMessageEvents(new Map());
     setViewMode('welcome');
     // Reset session to create new one
@@ -645,7 +666,7 @@ export default function App() {
 
   const handleNewSession = () => {
     setMessages([]);
-    setDisplayData(null);
+    // setDisplayData(null);
     setMessageEvents(new Map());
     setSessionId(null);
     setViewMode('welcome');
@@ -765,7 +786,6 @@ export default function App() {
                 scrollAreaRef={scrollAreaRef as React.RefObject<HTMLDivElement>}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
-                displayData={displayData}
                 messageEvents={messageEvents}
               />
             )}

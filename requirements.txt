@@ -1,0 +1,39 @@
+# HTKK AI Tax System Requirements
+# Core system dependencies
+
+# Google ADK for AI agents
+google-adk>=1.10.0
+
+# Backend framework
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.5.0
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Document processing (Essential for OCR)
+PyMuPDF>=1.26.0  # Core PDF processing, OCR, and page chunking
+PyPDF2>=3.0.0    # Additional PDF support
+lxml>=4.9.0      # XML processing
+python-multipart>=0.0.6
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+aiofiles>=23.2.1
+psutil>=5.9.0
+email-validator>=2.0.0
+
+# Development tools
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+
+# Installation instructions:
+# pip install -r requirements.txt
+# 
+# For development:
+# pip install -r requirements.txt[dev]

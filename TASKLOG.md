@@ -273,11 +273,12 @@
   - **Deliverable:** Python functions wrapped as ADK tools for HTKK operations
   - **Status:** ✅ COMPLETED - 18 tools implemented across 3 categories
 
-- [ ] **TASK-025:** Integrate Form Agent với frontend
+- [x] **TASK-025:** Integrate Form Agent với frontend
   - **Priority:** Critical
   - **Estimate:** 3 days
   - **Dependencies:** TASK-024
   - **Deliverable:** Seamless agent-frontend communication
+  - **Status:** ✅ COMPLETED - Frontend chat hiển thị function responses, hỗ trợ tải XML export
 
 #### ✅ **OCR Agent**
 - [✅] **TASK-026:** Develop OCR Agent as ADK Sub-Agent
@@ -363,10 +364,34 @@
   - **Deliverable:** Process multiple documents simultaneously
 
 - [ ] **TASK-036:** Implement document validation pipeline
+### ✅ AI Document → Form → XML Integration
+
+- [x] **TASK-025a:** R2 Upload → OCR → Mapping → XML pipeline
+  - **Priority:** Critical
+  - **Deliverable:** Người dùng upload tài liệu; OCR agent đọc từ R2, map sang form; Form agent export XML; XML xuất hiện trong chat để download
+  - **Status:** ✅ COMPLETED - Frontend uploads to R2, agent processes with new tools, XML appears in chat
+  - **Implementation:** Enhanced OCR tools with intelligent PDF chunking, form detection, and LLM integration
+
+- [x] **TASK-025b:** Enhanced OCR Agent with Intelligent Document Processing
   - **Priority:** High
-  - **Estimate:** 3 days
-  - **Dependencies:** TASK-035
-  - **Deliverable:** Validate extracted data before form population
+  - **Deliverable:** OCR agent tự động phân tích cấu trúc tài liệu, chia nhỏ PDF pages, và mapping thông minh
+  - **Status:** ✅ COMPLETED - Added analyze_document_structure tool, PDF chunking, and enhanced processing pipeline
+  - **Features:**
+    - PDF page chunking for large documents (>3 pages)
+    - Intelligent form type detection based on content patterns
+    - Structured processing workflow: Analysis → Processing → Mapping → XML Export
+    - Support for R2 documents, PDF, XML, and batch processing
+
+- [x] **TASK-025c:** OCR Tools Integration with LLMs
+  - **Priority:** High
+  - **Deliverable:** Các OCR tools hoạt động hiệu quả với LLMs, hỗ trợ xử lý tài liệu phức tạp
+  - **Status:** ✅ COMPLETED - Enhanced OCR tools with LLM-friendly output formats and intelligent processing
+  - **Tools Enhanced:**
+    - `analyze_document_structure()`: Phân tích cấu trúc và đề xuất form types
+    - `process_pdf_document()`: Xử lý PDF với chunking thông minh
+    - `extract_text_from_pdf()`: Trích xuất text với thông tin trang
+    - `map_extracted_data_to_form()`: Mapping dữ liệu vào form fields
+    - `process_r2_document()`: Xử lý tài liệu từ Cloudflare R2
 
 ---
 

@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "form_type": "01/GTGT",
+  "original_data": {
+    "Thông tin chung": {
+      "Loại hóa đơn": "HÓA ĐƠN GTGT",
+      "Ngày hóa đơn": "30 tháng 07 năm 2025",
+      "Mã của CQT": "M1-25-JLX8N-00101126193",
+      "Ký hiệu": "1"
+    },
+    "Thông tin người bán": {
+      "Tên đơn vị": "CÔNG TY TNHH MM MEGA MARKET (VIỆT NAM)",
+      "Địa chỉ": "Khu B, Khu đô thị mới An Phú - An Khánh, Phường An Phú, Thành Phố Thủ Đức, Thành Phố Hồ Chí Minh",
+      "MST": "0302249586",
+      "Số điện thoại": "028 3622 2909"
+    },
+    "Thông tin người mua": {
+      "Tên đơn vị": "NGUYEN HUY THANH",
+      "Địa chỉ": "LV3.19 CHUNG CU THU VEN HO TRUNG TAM P THU DUC TP HCM VIET",
+      "Mã số thuế": "2221002271600012"
+    },
+    "Chi tiết hóa đơn": [
+      {
+        "Mã hàng": "418747",
+        "Tên hàng hóa, dịch vụ": "BUN THAI",
+        "Đơn vị tính": "CAI",
+        "Số lượng": "1",
+        "Đơn giá trước thuế GTGT": "36.111",
+        "Giảm giá": "0",
+        "Giá trước thuế GTGT": "36.111"
+      }
+    ],
+    "Tổng kết": {
+      "Tổng cộng số lượng": "1",
+      "Tổng cộng trước thuế": "36.111",
+      "Tổng thuế": "36.111",
+      "Tổng cộng số tiền đã có thuế GTGT": "36.111",
+      "Số tiền viết bằng chữ": "Ba muoi chin nghin dong"
+    }
+  },
+  "mapped_data": {
+    "mapped_field": "mock_value"
+  },
+  "message": "Data mapped successfully to 01/GTGT form"
+}
